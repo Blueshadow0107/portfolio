@@ -135,7 +135,9 @@ function loadWebsiteOverrides(): Record<number, boolean> {
   }
 }
 
-const ALL_JSON: JsonProject[] = data.items.filter((it: JsonProject) => !it.parent_id);
+const ALL_JSON: JsonProject[] = data.items.filter(
+  (it: JsonProject) => !it.parent_id && Boolean(it.show_on_website)
+);
 const ALL_PROJECTS: UnifiedProject[] = [
   ...ACADEMIC.map((p, i) => ({
     id: 100 + i,
