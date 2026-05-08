@@ -118,7 +118,7 @@ function saveJson(key: string, value: Record<number, string>) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-function DeployButton() {
+function DeployButton({ websiteOverrides }: { websiteOverrides: Record<number, string> }) {
   const [deploying, setDeploying] = useState(false);
   const [deployMsg, setDeployMsg] = useState<string | null>(null);
 
@@ -126,7 +126,11 @@ function DeployButton() {
     setDeploying(true);
     setDeployMsg(null);
     try {
-      const res = await fetch("http://127.0.0.1:5123/deploy", { method: "POST" });
+      const res = await fetch("http://127.0.0.1:5123/deploy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ websiteOverrides }),
+      });
       const data = await res.json();
       if (data.status === "ok" && data.returncode === 0) {
         setDeployMsg("✅ Deployed! Check Vercel for progress.");
@@ -288,7 +292,7 @@ export default function DashboardPage() {
                 </motion.div>
               )}
             </AnimatePresence>
-            <DeployButton />
+            <DeployButton websiteOverrides={pendingWebsite} />
             <button
               onClick={resetOverrides}
               className="text-xs px-3 py-1.5 rounded-lg border border-neutral-700 text-neutral-400 hover:text-neutral-200 hover:border-neutral-500 transition-colors"

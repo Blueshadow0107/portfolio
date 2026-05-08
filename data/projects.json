@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T00:12:26.723663",
+  "generated_at": "2026-05-09T00:22:13.141185",
   "count": 25,
   "items": [
     {
@@ -279,7 +279,7 @@
       "updated_at": "2026-05-08T21:30:27.749141",
       "status": "perpetual",
       "parent_id": null,
-      "show_on_website": true,
+      "show_on_website": false,
       "icon": "\ud83d\uddc3\ufe0f",
       "tags": [
         "database",
@@ -326,7 +326,7 @@
       "updated_at": "2026-05-08T21:28:57.671252",
       "status": "idea",
       "parent_id": null,
-      "show_on_website": true,
+      "show_on_website": false,
       "icon": "\u26cf\ufe0f",
       "tags": [
         "future-project",
@@ -348,7 +348,7 @@
       "updated_at": "2026-04-29T19:24:45.288011",
       "status": "done",
       "parent_id": null,
-      "show_on_website": false,
+      "show_on_website": true,
       "icon": "\ud83d\udcf1",
       "tags": [
         "kde-connect",
@@ -370,7 +370,7 @@
       "updated_at": "2026-04-29T19:24:45.284035",
       "status": "perpetual",
       "parent_id": null,
-      "show_on_website": true,
+      "show_on_website": false,
       "icon": "\ud83c\udf10",
       "tags": [
         "nextjs",
@@ -413,7 +413,7 @@
       "updated_at": "2026-04-29T19:24:45.276923",
       "status": "done",
       "parent_id": null,
-      "show_on_website": false,
+      "show_on_website": true,
       "icon": "\ud83d\udc27",
       "tags": [
         "dotfiles",
@@ -510,7 +510,7 @@
       "updated_at": "2026-04-29T19:24:45.270786",
       "status": "perpetual",
       "parent_id": null,
-      "show_on_website": true,
+      "show_on_website": false,
       "icon": "\ud83d\udcd0",
       "tags": [
         "education",
