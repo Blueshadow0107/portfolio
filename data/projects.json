@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T00:06:56.614450",
+  "generated_at": "2026-05-09T00:11:13.416355",
   "count": 25,
   "items": [
     {
@@ -348,7 +348,7 @@
       "updated_at": "2026-04-29T19:24:45.288011",
       "status": "done",
       "parent_id": null,
-      "show_on_website": true,
+      "show_on_website": false,
       "icon": "\ud83d\udcf1",
       "tags": [
         "kde-connect",
@@ -391,7 +391,7 @@
       "updated_at": "2026-04-29T19:24:45.280170",
       "status": "done",
       "parent_id": null,
-      "show_on_website": true,
+      "show_on_website": false,
       "icon": "\ud83d\udd49\ufe0f",
       "tags": [
         "hinduism",
@@ -413,7 +413,7 @@
       "updated_at": "2026-04-29T19:24:45.276923",
       "status": "done",
       "parent_id": null,
-      "show_on_website": true,
+      "show_on_website": false,
       "icon": "\ud83d\udc27",
       "tags": [
         "dotfiles",
@@ -434,7 +434,7 @@
       "updated_at": "2026-04-29T19:24:45.273781",
       "status": "perpetual",
       "parent_id": null,
-      "show_on_website": true,
+      "show_on_website": false,
       "icon": "\ud83c\udfb5",
       "tags": [
         "live-coding",
