@@ -45,6 +45,14 @@ const projects = [
     icon: "🌀",
   },
   {
+    title: "Prompt-to-CAD",
+    description:
+      "CLI tool that turns natural language into executable CAD models using a fine-tuned vision-language model. Generates CadQuery code, STL/STEP exports, and rendered previews.",
+    tech: ["Python", "PyTorch", "CadQuery", "Transformers"],
+    gradient: "from-indigo-500/20 to-violet-600/20",
+    icon: "🧊",
+  },
+  {
     title: "RPG Map Engine",
     description:
       "Canvas-powered map authoring and scene tools inspired by classic tile-based RPG workflows.",
@@ -75,14 +83,6 @@ const projects = [
     tech: ["Markdown", "Shell", "Hyprland"],
     gradient: "from-sky-500/20 to-blue-600/20",
     icon: "🐧",
-  },
-  {
-    title: "Prompt-to-CAD",
-    description:
-      "CLI tool that turns natural language into executable CAD models using a fine-tuned vision-language model. Generates CadQuery code, STL/STEP exports, and rendered previews.",
-    tech: ["Python", "PyTorch", "CadQuery", "Transformers"],
-    gradient: "from-indigo-500/20 to-violet-600/20",
-    icon: "🧊",
   },
 ];
 
