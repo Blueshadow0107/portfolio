@@ -1,9 +1,44 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useMemo, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
+import data from "../data/projects.json";
 
-const projects = [
+type JsonProject = {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  parent_id: number | null;
+  show_on_website: boolean | number;
+  icon: string | null;
+  tags: string[];
+  content: string;
+  children?: JsonProject[];
+};
+
+type AcademicProject = {
+  title: string;
+  description: string;
+  tech: string[];
+  gradient: string;
+  icon: string;
+};
+
+type UnifiedProject = {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  tags: string[];
+  gradient: string;
+  icon: string;
+  content?: string;
+  children?: JsonProject[];
+};
+
+const ACADEMIC: AcademicProject[] = [
   {
     title: "HiLiftPW-1 Grid Generation",
     description:
@@ -44,46 +79,81 @@ const projects = [
     gradient: "from-lime-500/20 to-green-600/20",
     icon: "🌀",
   },
-  {
-    title: "Prompt-to-CAD",
-    description:
-      "CLI tool that turns natural language into executable CAD models using a fine-tuned vision-language model. Generates CadQuery code, STL/STEP exports, and rendered previews.",
-    tech: ["Python", "PyTorch", "CadQuery", "Transformers"],
-    gradient: "from-indigo-500/20 to-violet-600/20",
-    icon: "🧊",
-  },
-  {
-    title: "RPG Map Engine",
-    description:
-      "Canvas-powered map authoring and scene tools inspired by classic tile-based RPG workflows.",
-    tech: ["Flask", "JavaScript", "Canvas"],
-    gradient: "from-emerald-500/20 to-teal-600/20",
-    icon: "🗺️",
-  },
-  {
-    title: "PokeEmerald Expansion",
-    description:
-      "ROM-hack framework work focused on gameplay systems, tooling, and robust build pipelines.",
-    tech: ["C", "ARM ASM", "Make"],
-    gradient: "from-amber-500/20 to-orange-600/20",
-    icon: "🎮",
-  },
-  {
-    title: "Math In Motion Assets",
-    description:
-      "Animation source pipeline for educational math videos, rendered in a repeatable production flow.",
-    tech: ["Python", "Manim", "Kdenlive"],
-    gradient: "from-violet-500/20 to-purple-600/20",
-    icon: "📐",
-  },
-  {
-    title: "Hyprland Rice Docs",
-    description:
-      "Workflow-focused Linux desktop documentation with automation scripts and curated setup references.",
-    tech: ["Markdown", "Shell", "Hyprland"],
-    gradient: "from-sky-500/20 to-blue-600/20",
-    icon: "🐧",
-  },
+];
+
+function statusGradient(status: string): string {
+  switch (status) {
+    case "done":
+      return "from-emerald-500/20 to-teal-600/20";
+    case "in-progress":
+      return "from-cyan-500/20 to-sky-600/20";
+    case "perpetual":
+      return "from-amber-500/20 to-orange-600/20";
+    default:
+      return "from-purple-500/20 to-fuchsia-600/20";
+  }
+}
+
+function statusBadgeClass(status: string): string {
+  switch (status) {
+    case "done":
+      return "bg-emerald-500/20 text-emerald-300 border-emerald-500/30";
+    case "in-progress":
+      return "bg-cyan-500/20 text-cyan-300 border-cyan-500/30";
+    case "perpetual":
+      return "bg-amber-500/20 text-amber-300 border-amber-500/30";
+    default:
+      return "bg-purple-500/20 text-purple-300 border-purple-500/30";
+  }
+}
+
+function statusIcon(status: string): string {
+  switch (status) {
+    case "done":
+      return "✅";
+    case "in-progress":
+      return "🔨";
+    case "perpetual":
+      return "♾️";
+    default:
+      return "💡";
+  }
+}
+
+// Merge academic + JSON projects
+function loadWebsiteOverrides(): Record<number, boolean> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem("dashboard-website-overrides");
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return Object.fromEntries(
+      Object.entries(parsed).map(([k, v]) => [Number(k), v === "true"])
+    );
+  } catch {
+    return {};
+  }
+}
+
+const ALL_JSON: JsonProject[] = data.items.filter((it: JsonProject) => !it.parent_id);
+const ALL_PROJECTS: UnifiedProject[] = [
+  ...ACADEMIC.map((p, i) => ({
+    id: 100 + i,
+    ...p,
+    status: "done",
+    tags: p.tech,
+  })),
+  ...ALL_JSON.map((p) => ({
+    id: p.id,
+    title: p.title,
+    description: p.description,
+    status: p.status,
+    tags: p.tags,
+    gradient: statusGradient(p.status),
+    icon: p.icon || statusIcon(p.status),
+    content: p.content,
+    children: p.children,
+  })),
 ];
 
 const journey = [
@@ -136,6 +206,42 @@ const fadeUp = {
 };
 
 export default function HomePage() {
+  const [selected, setSelected] = useState<UnifiedProject | null>(null);
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [visibleIds, setVisibleIds] = useState<Set<number>>(new Set(ALL_PROJECTS.map((p) => p.id)));
+
+  useEffect(() => {
+    const overrides = loadWebsiteOverrides();
+    const visible = new Set(
+      ALL_PROJECTS
+        .filter((p) => {
+          if (p.id >= 100) return true; // academic projects always visible
+          const jsonItem = ALL_JSON.find((it) => it.id === p.id);
+          if (!jsonItem) return false;
+          return overrides[p.id] ?? jsonItem.show_on_website;
+        })
+        .map((p) => p.id)
+    );
+    setVisibleIds(visible);
+  }, []);
+
+  const displayedProjects = ALL_PROJECTS.filter((p) => visibleIds.has(p.id));
+
+  const allTags = useMemo(
+    () => Array.from(new Set(displayedProjects.flatMap((p) => p.tags))).sort(),
+    [displayedProjects]
+  );
+
+  const filteredProjects = useMemo(() => {
+    if (!activeTag) return displayedProjects;
+    return displayedProjects.filter((p) => p.tags.some((t) => t.toLowerCase() === activeTag.toLowerCase()));
+  }, [activeTag, displayedProjects]);
+
+  const dimmedProjects = useMemo(() => {
+    if (!activeTag) return new Set<number>();
+    return new Set(displayedProjects.filter((p) => !p.tags.some((t) => t.toLowerCase() === activeTag.toLowerCase())).map((p) => p.id));
+  }, [activeTag, displayedProjects]);
+
   return (
     <main className="min-h-screen bg-[#0a0514]">
       <header className="sticky top-0 z-50 border-b border-purple-500/20 bg-[#0a0514]/80 backdrop-blur-md">
@@ -149,6 +255,7 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* Hero */}
       <section className="mx-auto w-full max-w-6xl px-4 pb-14 pt-12 sm:px-6 md:pt-20">
         <motion.div
           initial="hidden"
@@ -184,6 +291,7 @@ export default function HomePage() {
         </motion.div>
       </section>
 
+      {/* Projects */}
       <section id="projects" className="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6">
         <motion.div
           initial="hidden"
@@ -196,39 +304,98 @@ export default function HomePage() {
           <p className="mt-2 text-violet-300">Selected builds and experiments from my personal workspace.</p>
         </motion.div>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {projects.map((project, index) => (
-            <motion.article
-              key={project.title}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.25 }}
-              variants={fadeUp}
-              transition={{ duration: 0.45, delay: index * 0.08 }}
-              className="glass-card overflow-hidden transition hover:border-purple-500/30/80"
+        {/* Tag filter */}
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="mt-4"
+        >
+          <div className="flex flex-wrap gap-2 items-center">
+            <span className="text-xs text-neutral-500 mr-1">Filter:</span>
+            <button
+              onClick={() => setActiveTag(null)}
+              className={`text-xs px-2.5 py-1 rounded-full border transition ${
+                !activeTag
+                  ? "bg-violet-600 border-violet-500 text-white"
+                  : "border-purple-500/30 bg-purple-900/50 text-violet-300 hover:border-cyan-400/50"
+              }`}
             >
-              <div className={`h-40 bg-gradient-to-br ${project.gradient} flex items-center justify-center`}>
-                <span className="text-5xl select-none">{project.icon}</span>
-              </div>
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-white">{project.title}</h3>
-                <p className="mt-2 text-sm text-violet-300">{project.description}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {project.tech.map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border border-purple-500/30 bg-purple-900/50 px-3 py-1 text-xs font-medium text-fuchsia-300"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.article>
-          ))}
+              All
+            </button>
+            {allTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setActiveTag(tag === activeTag ? null : tag)}
+                className={`text-xs px-2.5 py-1 rounded-full border transition ${
+                  activeTag === tag
+                    ? "bg-violet-600 border-violet-500 text-white"
+                    : "border-purple-500/30 bg-purple-900/50 text-violet-300 hover:border-cyan-400/50"
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </motion.div>
+
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <AnimatePresence mode="popLayout">
+            {displayedProjects.map((project, index) => {
+              const isDimmed = dimmedProjects.has(project.id);
+              const isHidden = activeTag && !filteredProjects.some((p) => p.id === project.id);
+              if (isHidden) return null;
+
+              return (
+                <motion.article
+                  key={project.id}
+                  layout
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={{ once: true, amount: 0.25 }}
+                  variants={fadeUp}
+                  transition={{ duration: 0.45, delay: index * 0.05 }}
+                  onClick={() => setSelected(project)}
+                  className={`glass-card overflow-hidden transition cursor-pointer hover:border-purple-500/40 ${
+                    isDimmed ? "opacity-30" : "opacity-100"
+                  }`}
+                >
+                  <div className={`h-40 bg-gradient-to-br ${project.gradient} flex items-center justify-center relative`}>
+                    <span className="text-5xl select-none">{project.icon}</span>
+                    {project.status !== "done" && (
+                      <span className={`absolute top-3 right-3 text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusBadgeClass(project.status)}`}>
+                        {project.status}
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-lg font-semibold text-white">{project.title}</h3>
+                    <p className="mt-2 text-sm text-violet-300">{project.description}</p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {project.tags.slice(0, 6).map((item) => (
+                        <span
+                          key={item}
+                          className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
+                            activeTag === item
+                              ? "border-cyan-400/50 bg-cyan-900/40 text-cyan-300"
+                              : "border-purple-500/30 bg-purple-900/50 text-fuchsia-300"
+                          }`}
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.article>
+              );
+            })}
+          </AnimatePresence>
         </div>
       </section>
 
+      {/* About */}
       <section id="about" className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 pb-16 sm:px-6 md:grid-cols-5">
         <motion.div
           initial="hidden"
@@ -301,6 +468,7 @@ export default function HomePage() {
         </motion.aside>
       </section>
 
+      {/* Contact */}
       <footer id="connect" className="border-t border-purple-500/20 bg-[#05030a]/70">
         <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 py-12 sm:px-6 md:grid-cols-5">
           <motion.div
@@ -366,6 +534,90 @@ export default function HomePage() {
       <div className="border-t border-purple-500/20 bg-[#05030a] py-4 text-center text-xs text-violet-500">
         © {new Date().getFullYear()} Srivijayesh Venugopal. Built with Next.js & Tailwind CSS.
       </div>
+
+      {/* Detail Modal */}
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelected(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-neutral-900 border border-neutral-700 rounded-2xl shadow-2xl"
+            >
+              <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900/95 backdrop-blur-sm rounded-t-2xl">
+                <div>
+                  <h2 className="text-lg font-bold text-white">{selected.title}</h2>
+                  {selected.status !== "done" && (
+                    <span className={`inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusBadgeClass(selected.status)}`}>
+                      {selected.status}
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={() => setSelected(null)}
+                  className="p-2 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="px-6 py-5 space-y-5">
+                {selected.description && (
+                  <p className="text-sm text-neutral-300 leading-relaxed">{selected.description}</p>
+                )}
+
+                {selected.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {selected.tags.map((tag) => (
+                      <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-neutral-800 text-neutral-300 border border-neutral-700">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {selected.content && (
+                  <div className="bg-neutral-950/50 border border-neutral-800 rounded-lg p-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-2">Notes</h3>
+                    <pre className="text-sm text-neutral-300 whitespace-pre-wrap font-mono leading-relaxed">{selected.content}</pre>
+                  </div>
+                )}
+
+                {selected.children && selected.children.length > 0 && (
+                  <div>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-3">Sub-items</h3>
+                    <div className="space-y-2">
+                      {selected.children.map((child) => (
+                        <div key={child.id} className="flex items-center justify-between bg-neutral-950/50 border border-neutral-800 rounded-lg px-4 py-3">
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-neutral-200 truncate">{child.title}</p>
+                            {child.description && (
+                              <p className="text-xs text-neutral-500 truncate mt-0.5">{child.description}</p>
+                            )}
+                          </div>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusBadgeClass(child.status)}`}>
+                            {child.status}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

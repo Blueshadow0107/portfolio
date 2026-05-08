@@ -1,0 +1,770 @@
+{
+  "generated_at": "2026-05-09T00:03:46.188369",
+  "count": 25,
+  "items": [
+    {
+      "id": 25,
+      "title": "Division Episode",
+      "description": "Fractions and long division animations. Script written.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.384997",
+      "updated_at": "2026-05-08T23:14:09.384997",
+      "status": "idea",
+      "parent_id": 3,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "manim",
+        "youtube"
+      ],
+      "children": []
+    },
+    {
+      "id": 24,
+      "title": "Multiplication Episode",
+      "description": "Cross product and matrix multiplication visuals. In production.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.383272",
+      "updated_at": "2026-05-08T23:14:09.383272",
+      "status": "in-progress",
+      "parent_id": 3,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "manim",
+        "youtube"
+      ],
+      "children": []
+    },
+    {
+      "id": 23,
+      "title": "Minus Sign Episode",
+      "description": "Subtraction concepts and negative numbers. Rendered and edited.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.381521",
+      "updated_at": "2026-05-08T23:14:09.381521",
+      "status": "done",
+      "parent_id": 3,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "manim",
+        "youtube"
+      ],
+      "children": []
+    },
+    {
+      "id": 22,
+      "title": "Plus Sign Episode",
+      "description": "Addition operator history and visual proof. Rendered and edited.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.379646",
+      "updated_at": "2026-05-08T23:14:09.379646",
+      "status": "done",
+      "parent_id": 3,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "manim",
+        "youtube"
+      ],
+      "children": []
+    },
+    {
+      "id": 21,
+      "title": "Composition #15 \u2014 Classical Remix",
+      "description": "Bach-style counterpoint with modern synth patches.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.377774",
+      "updated_at": "2026-05-08T23:14:09.377774",
+      "status": "in-progress",
+      "parent_id": 4,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "music",
+        "sonic-pi"
+      ],
+      "children": []
+    },
+    {
+      "id": 20,
+      "title": "Composition #12 \u2014 Drum & Bass",
+      "description": "Breakbeat patterns with live-codable filter sweeps.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.376173",
+      "updated_at": "2026-05-08T23:14:09.376173",
+      "status": "done",
+      "parent_id": 4,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "music",
+        "sonic-pi"
+      ],
+      "children": []
+    },
+    {
+      "id": 19,
+      "title": "Composition #7 \u2014 Ambient Drone",
+      "description": "Generative ambient piece using randomized scales and sleep patterns.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.374521",
+      "updated_at": "2026-05-08T23:14:09.374521",
+      "status": "done",
+      "parent_id": 4,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "music",
+        "sonic-pi"
+      ],
+      "children": []
+    },
+    {
+      "id": 18,
+      "title": "Custom Tools",
+      "description": "gbagfx, mid2agb, mapjson tooling improvements.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.372675",
+      "updated_at": "2026-05-08T23:14:09.372675",
+      "status": "done",
+      "parent_id": 2,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "gba",
+        "pokemon"
+      ],
+      "children": []
+    },
+    {
+      "id": 17,
+      "title": "Overworld Expansion",
+      "description": "New map scripts and event systems for expanded regions.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.370815",
+      "updated_at": "2026-05-08T23:14:09.370815",
+      "status": "in-progress",
+      "parent_id": 2,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "gba",
+        "pokemon"
+      ],
+      "children": []
+    },
+    {
+      "id": 16,
+      "title": "Battle System Config",
+      "description": "Feature toggles for modern battle mechanics in config headers.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.369175",
+      "updated_at": "2026-05-08T23:14:09.369175",
+      "status": "done",
+      "parent_id": 2,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "gba",
+        "pokemon"
+      ],
+      "children": []
+    },
+    {
+      "id": 15,
+      "title": "DM Panel",
+      "description": "Dungeon Master controls for fog-of-war, token placement, and scene management.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.367467",
+      "updated_at": "2026-05-08T23:14:09.367467",
+      "status": "done",
+      "parent_id": 1,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "frontend",
+        "rpg-engine"
+      ],
+      "children": []
+    },
+    {
+      "id": 14,
+      "title": "SocketIO Backend",
+      "description": "Real-time game state sync with Flask-SocketIO.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.365678",
+      "updated_at": "2026-05-08T23:14:09.365678",
+      "status": "idea",
+      "parent_id": 1,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "frontend",
+        "rpg-engine"
+      ],
+      "children": []
+    },
+    {
+      "id": 13,
+      "title": "Metatile Builder",
+      "description": "Visual metatile and subtile editor for assembling 16x16 tiles.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.363827",
+      "updated_at": "2026-05-08T23:14:09.363827",
+      "status": "idea",
+      "parent_id": 1,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "frontend",
+        "rpg-engine"
+      ],
+      "children": []
+    },
+    {
+      "id": 12,
+      "title": "Tile Engine Canvas Renderer",
+      "description": "HTML5 Canvas 2D tile renderer with camera, zoom, tokens, and Y-sort.",
+      "type": "note",
+      "content": "",
+      "file_name": null,
+      "created_at": "2026-05-08T23:14:09.361311",
+      "updated_at": "2026-05-08T23:14:09.361311",
+      "status": "in-progress",
+      "parent_id": 1,
+      "show_on_website": false,
+      "icon": null,
+      "tags": [
+        "frontend",
+        "rpg-engine"
+      ],
+      "children": []
+    },
+    {
+      "id": 11,
+      "title": "Personal Database",
+      "description": "Flask-based personal knowledge base with tags, search, and file uploads.",
+      "type": "note",
+      "content": "A lightweight SQLite-backed personal DB for notes, bookmarks, ideas, and references.\n\nFeatures:\n- Full-text search across title, description, and content\n- Tag system with auto-creation\n- File uploads with type detection\n- Web UI for CRUD operations\n\nTech: Flask, SQLite, Jinja2\n\nKey files:\n- app.py (Flask routes)\n- database.py (SQLite layer)\n- templates/ (Jinja2 HTML)\n- static/ (CSS/JS)\n\nRuns on localhost:5123\n",
+      "file_name": null,
+      "created_at": "2026-05-08T21:30:27.749141",
+      "updated_at": "2026-05-08T21:30:27.749141",
+      "status": "perpetual",
+      "parent_id": null,
+      "show_on_website": true,
+      "icon": "\ud83d\uddc3\ufe0f",
+      "tags": [
+        "database",
+        "flask",
+        "python",
+        "sqlite",
+        "tools",
+        "web"
+      ],
+      "children": []
+    },
+    {
+      "id": 10,
+      "title": "Prompt-to-CAD",
+      "description": "CLI tool that turns natural language into executable CAD models using a fine-tuned vision-language model.",
+      "type": "note",
+      "content": "Pipeline:\n1. User types a text prompt\n2. Qwen3-VL-2B (Zero-To-CAD fine-tuned) generates CadQuery Python code\n3. Sandboxed executor validates and runs the code\n4. Renderer exports STL, STEP, SVG, and PNG views\n\nKey files:\n- generate.py (CLI entry)\n- model.py (model loading & generation)\n- executor.py (sandboxed code execution with whitelist)\n- renderer.py (STL/STEP export + matplotlib/trimesh rendering)\n\nTech: Python, PyTorch, Transformers, CadQuery, trimesh, matplotlib\n\nGitHub: https://github.com/Blueshadow0107/prompt-to-cad\n\nNotes:\n- Model has a weird inspect.signature preamble tic\n- Avoid the word \"cylinder\" in prompts (hallucinates function calls)\n- Success rate ~70% for simple mechanical parts, ~0% for mugs/consumer objects\n",
+      "file_name": null,
+      "created_at": "2026-05-08T21:30:27.744945",
+      "updated_at": "2026-05-08T21:30:27.744945",
+      "status": "done",
+      "parent_id": null,
+      "show_on_website": true,
+      "icon": "\ud83e\uddca",
+      "tags": [
+        "cad",
+        "cadquery",
+        "cli",
+        "ml",
+        "python",
+        "pytorch",
+        "transformers"
+      ],
+      "children": []
+    },
+    {
+      "id": 9,
+      "title": "Minecraft Modding",
+      "description": "Build Minecraft mods using Forge/Fabric. Custom blocks, items, mobs, dimensions, and game mechanics.",
+      "type": "note",
+      "content": "Future project idea:\n- Mod loader: Forge or Fabric (Fabric is lighter for small mods)\n- Language: Java + Gradle\n- IDE: IntelliJ IDEA\n- Possible features:\n  * Custom blocks with unique properties\n  * New tools/weapons with special abilities\n  * Dimension generation\n  * Mob AI behaviors\n  * Integration with CadQuery for block model design?\n\nNote: Could potentially bridge with the prompt-to-cad project for procedural block model generation.\n\nReferences:\n- Fabric wiki: https://fabricmc.net/wiki/\n- Forge docs: https://docs.minecraftforge.net/\n- Yarn mappings for deobfuscation\n",
+      "file_name": null,
+      "created_at": "2026-05-08T21:28:57.671252",
+      "updated_at": "2026-05-08T21:28:57.671252",
+      "status": "idea",
+      "parent_id": null,
+      "show_on_website": true,
+      "icon": "\u26cf\ufe0f",
+      "tags": [
+        "future-project",
+        "gamedev",
+        "idea",
+        "java",
+        "minecraft"
+      ],
+      "children": []
+    },
+    {
+      "id": 8,
+      "title": "Tablet Input Setup",
+      "description": "Weylus + KDE Connect tablet input configuration.",
+      "type": "note",
+      "content": "Scripts:\n- install.sh\n- start.sh\n- weylus.service (systemd service file)\n\nAlso includes kdeconnect-commands.json for device integration.",
+      "file_name": null,
+      "created_at": "2026-04-29T19:24:45.288011",
+      "updated_at": "2026-04-29T19:24:45.288011",
+      "status": "done",
+      "parent_id": null,
+      "show_on_website": true,
+      "icon": "\ud83d\udcf1",
+      "tags": [
+        "kde-connect",
+        "linux",
+        "tablet",
+        "tools",
+        "weylus"
+      ],
+      "children": []
+    },
+    {
+      "id": 7,
+      "title": "Personal Website",
+      "description": "Next.js website project.",
+      "type": "note",
+      "content": "Next.js + TypeScript project in Website/ directory.\n\nHas .next/, app/, components/, public/ structure.",
+      "file_name": null,
+      "created_at": "2026-04-29T19:24:45.284035",
+      "updated_at": "2026-04-29T19:24:45.284035",
+      "status": "perpetual",
+      "parent_id": null,
+      "show_on_website": true,
+      "icon": "\ud83c\udf10",
+      "tags": [
+        "nextjs",
+        "react",
+        "typescript",
+        "web"
+      ],
+      "children": []
+    },
+    {
+      "id": 6,
+      "title": "Vedas & Upanishads Study",
+      "description": "Deep-dive markdown notes on Hindu scriptures.",
+      "type": "note",
+      "content": "Texts covered:\n- Brihadaranyaka Upanishad\n- Chandogya Upanishad\n- Isha Upanishad\n- Katha Upanishad\n- Kena Upanishad\n- Atharvaveda\n\nStored as markdown in Vedas/ directory.",
+      "file_name": null,
+      "created_at": "2026-04-29T19:24:45.280170",
+      "updated_at": "2026-04-29T19:24:45.280170",
+      "status": "done",
+      "parent_id": null,
+      "show_on_website": true,
+      "icon": "\ud83d\udd49\ufe0f",
+      "tags": [
+        "hinduism",
+        "philosophy",
+        "spirituality",
+        "study",
+        "vedas"
+      ],
+      "children": []
+    },
+    {
+      "id": 5,
+      "title": "Hyprland Rice",
+      "description": "Personal Hyprland desktop configuration docs and wallpaper scripts.",
+      "type": "note",
+      "content": "Based on JaKooLit's Hyprland-Dots.\n\nHelper scripts:\n- download-purple-wallpapers.sh (purple/space/cyberpunk)\n- download-blue-ocean-wallpapers.sh (dark-blue/ocean)\n\nActual configs live in ~/.config/hypr/ and ~/.config/waybar/.",
+      "file_name": null,
+      "created_at": "2026-04-29T19:24:45.276923",
+      "updated_at": "2026-04-29T19:24:45.276923",
+      "status": "done",
+      "parent_id": null,
+      "show_on_website": true,
+      "icon": "\ud83d\udc27",
+      "tags": [
+        "dotfiles",
+        "hyprland",
+        "linux",
+        "ricing"
+      ],
+      "children": []
+    },
+    {
+      "id": 4,
+      "title": "Sonic Pi Compositions",
+      "description": "Live-coded music using Sonic Pi (Ruby DSL).",
+      "type": "note",
+      "content": "15 pieces in compositions/*.rb \u2014 tutorials + thematic tracks.\n\nAudio backend: JACK / PipeWire (using pw-jack bridge).\n\nRun: sonic-pi-fix.sh kills stale JACK and launches Sonic Pi.",
+      "file_name": null,
+      "created_at": "2026-04-29T19:24:45.273781",
+      "updated_at": "2026-04-29T19:24:45.273781",
+      "status": "perpetual",
+      "parent_id": null,
+      "show_on_website": true,
+      "icon": "\ud83c\udfb5",
+      "tags": [
+        "live-coding",
+        "music",
+        "ruby",
+        "sonic-pi"
+      ],
+      "children": [
+        {
+          "id": 21,
+          "title": "Composition #15 \u2014 Classical Remix",
+          "description": "Bach-style counterpoint with modern synth patches.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.377774",
+          "updated_at": "2026-05-08T23:14:09.377774",
+          "status": "in-progress",
+          "parent_id": 4,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "music",
+            "sonic-pi"
+          ]
+        },
+        {
+          "id": 20,
+          "title": "Composition #12 \u2014 Drum & Bass",
+          "description": "Breakbeat patterns with live-codable filter sweeps.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.376173",
+          "updated_at": "2026-05-08T23:14:09.376173",
+          "status": "done",
+          "parent_id": 4,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "music",
+            "sonic-pi"
+          ]
+        },
+        {
+          "id": 19,
+          "title": "Composition #7 \u2014 Ambient Drone",
+          "description": "Generative ambient piece using randomized scales and sleep patterns.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.374521",
+          "updated_at": "2026-05-08T23:14:09.374521",
+          "status": "done",
+          "parent_id": 4,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "music",
+            "sonic-pi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Math in Motion \u2014 YouTube Series",
+      "description": "Manim animation scripts for a math education series. Vertical 1080\u00d71920 @ 60fps.",
+      "type": "note",
+      "content": "Episodes:\n- Plus sign\n- Minus sign\n- Multiplication sign\n- Division sign\n- Equals sign\n\nWorkflow: Manim \u2192 Kdenlive \u2192 narration sync \u2192 upload.\n\nOne hardcoded asset path: /home/cyanidepopcorn/Projects/utube_assets/recorde.jpg\n\nKnown issue: widmann.jpg is 0 bytes (unfinished).",
+      "file_name": null,
+      "created_at": "2026-04-29T19:24:45.270786",
+      "updated_at": "2026-04-29T19:24:45.270786",
+      "status": "perpetual",
+      "parent_id": null,
+      "show_on_website": true,
+      "icon": "\ud83d\udcd0",
+      "tags": [
+        "education",
+        "manim",
+        "math",
+        "video",
+        "youtube"
+      ],
+      "children": [
+        {
+          "id": 25,
+          "title": "Division Episode",
+          "description": "Fractions and long division animations. Script written.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.384997",
+          "updated_at": "2026-05-08T23:14:09.384997",
+          "status": "idea",
+          "parent_id": 3,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "manim",
+            "youtube"
+          ]
+        },
+        {
+          "id": 24,
+          "title": "Multiplication Episode",
+          "description": "Cross product and matrix multiplication visuals. In production.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.383272",
+          "updated_at": "2026-05-08T23:14:09.383272",
+          "status": "in-progress",
+          "parent_id": 3,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "manim",
+            "youtube"
+          ]
+        },
+        {
+          "id": 23,
+          "title": "Minus Sign Episode",
+          "description": "Subtraction concepts and negative numbers. Rendered and edited.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.381521",
+          "updated_at": "2026-05-08T23:14:09.381521",
+          "status": "done",
+          "parent_id": 3,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "manim",
+            "youtube"
+          ]
+        },
+        {
+          "id": 22,
+          "title": "Plus Sign Episode",
+          "description": "Addition operator history and visual proof. Rendered and edited.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.379646",
+          "updated_at": "2026-05-08T23:14:09.379646",
+          "status": "done",
+          "parent_id": 3,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "manim",
+            "youtube"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Pok\u00e9mon pokeemerald-expansion",
+      "description": "GBA ROM hack dev framework based on pret's pokeemerald decompilation.",
+      "type": "note",
+      "content": "Massive C + ARM asm codebase (~69K files).\n\nBuild commands:\n  make -j$(nproc)\n  make check\n  make debug\n\nKey areas: src/ (battle, overworld, UI, audio), include/config/ (feature toggles).\n\nBranch strategy: master (stable), upcoming (new features).",
+      "file_name": null,
+      "created_at": "2026-04-29T19:24:45.267669",
+      "updated_at": "2026-04-29T19:24:45.267669",
+      "status": "in-progress",
+      "parent_id": null,
+      "show_on_website": true,
+      "icon": "\ud83c\udfae",
+      "tags": [
+        "asm",
+        "c",
+        "gamedev",
+        "gba",
+        "rom-hack"
+      ],
+      "children": [
+        {
+          "id": 18,
+          "title": "Custom Tools",
+          "description": "gbagfx, mid2agb, mapjson tooling improvements.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.372675",
+          "updated_at": "2026-05-08T23:14:09.372675",
+          "status": "done",
+          "parent_id": 2,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "gba",
+            "pokemon"
+          ]
+        },
+        {
+          "id": 17,
+          "title": "Overworld Expansion",
+          "description": "New map scripts and event systems for expanded regions.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.370815",
+          "updated_at": "2026-05-08T23:14:09.370815",
+          "status": "in-progress",
+          "parent_id": 2,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "gba",
+            "pokemon"
+          ]
+        },
+        {
+          "id": 16,
+          "title": "Battle System Config",
+          "description": "Feature toggles for modern battle mechanics in config headers.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.369175",
+          "updated_at": "2026-05-08T23:14:09.369175",
+          "status": "done",
+          "parent_id": 2,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "gba",
+            "pokemon"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "title": "RPG Map Engine",
+      "description": "Browser-based RPG map builder inspired by Pok\u00e9mon Emerald. Flask backend + HTML5 Canvas tile renderer.",
+      "type": "note",
+      "content": "Tech stack: Flask 3, vanilla JS, Pillow.\n\nKey files:\n- server.py (minimal, needs SocketIO expansion)\n- tile-engine.js (camera, zoom, Y-sort)\n- dm.js / scene.js (DM panel & player display)\n\nTodo: implement the documented SocketIO + REST API backend.",
+      "file_name": null,
+      "created_at": "2026-04-29T19:24:45.264743",
+      "updated_at": "2026-04-29T19:24:45.264743",
+      "status": "in-progress",
+      "parent_id": null,
+      "show_on_website": true,
+      "icon": "\ud83d\uddfa\ufe0f",
+      "tags": [
+        "canvas",
+        "flask",
+        "gamedev",
+        "pokemon",
+        "web"
+      ],
+      "children": [
+        {
+          "id": 15,
+          "title": "DM Panel",
+          "description": "Dungeon Master controls for fog-of-war, token placement, and scene management.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.367467",
+          "updated_at": "2026-05-08T23:14:09.367467",
+          "status": "done",
+          "parent_id": 1,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "frontend",
+            "rpg-engine"
+          ]
+        },
+        {
+          "id": 14,
+          "title": "SocketIO Backend",
+          "description": "Real-time game state sync with Flask-SocketIO.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.365678",
+          "updated_at": "2026-05-08T23:14:09.365678",
+          "status": "idea",
+          "parent_id": 1,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "frontend",
+            "rpg-engine"
+          ]
+        },
+        {
+          "id": 13,
+          "title": "Metatile Builder",
+          "description": "Visual metatile and subtile editor for assembling 16x16 tiles.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.363827",
+          "updated_at": "2026-05-08T23:14:09.363827",
+          "status": "idea",
+          "parent_id": 1,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "frontend",
+            "rpg-engine"
+          ]
+        },
+        {
+          "id": 12,
+          "title": "Tile Engine Canvas Renderer",
+          "description": "HTML5 Canvas 2D tile renderer with camera, zoom, tokens, and Y-sort.",
+          "type": "note",
+          "content": "",
+          "file_name": null,
+          "created_at": "2026-05-08T23:14:09.361311",
+          "updated_at": "2026-05-08T23:14:09.361311",
+          "status": "in-progress",
+          "parent_id": 1,
+          "show_on_website": 0,
+          "icon": null,
+          "tags": [
+            "frontend",
+            "rpg-engine"
+          ]
+        }
+      ]
+    }
+  ]
+}

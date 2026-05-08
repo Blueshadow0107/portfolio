@@ -6,10 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "serve": "npx serve out",
+    "sync": "cd ../personal-db && source .venv/bin/activate && python sync_to_json.py && cd ../Website && npm run build"
   },
   "dependencies": {
-    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^11.11.17",
     "next": "^16.2.4",
     "qrcode.react": "^4.2.0",
