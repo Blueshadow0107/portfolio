@@ -296,13 +296,23 @@ export default function DashboardPage() {
     });
   }, []);
 
-  const saveChanges = useCallback(() => {
+  const saveChanges = useCallback(async () => {
     saveJson(STATUS_KEY, pendingStatus);
     saveJson(WEBSITE_KEY, pendingWebsite);
     saveJson(PRIORITY_KEY, pendingPriority);
     setSavedStatus(pendingStatus);
     setSavedWebsite(pendingWebsite);
     setSavedPriority(pendingPriority);
+    // Persist priorities to DB
+    try {
+      await fetch("http://127.0.0.1:5123/api/update-priority", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ overrides: pendingPriority }),
+      });
+    } catch {
+      // Silently fail if Flask is not running
+    }
   }, [pendingStatus, pendingWebsite, pendingPriority]);
 
   const resetOverrides = useCallback(() => {
