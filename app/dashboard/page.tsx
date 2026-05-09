@@ -296,6 +296,8 @@ export default function DashboardPage() {
     });
   }, []);
 
+  const [saveMsg, setSaveMsg] = useState<string | null>(null);
+
   const saveChanges = useCallback(async () => {
     saveJson(STATUS_KEY, pendingStatus);
     saveJson(WEBSITE_KEY, pendingWebsite);
@@ -305,14 +307,24 @@ export default function DashboardPage() {
     setSavedPriority(pendingPriority);
     // Persist priorities to DB
     try {
-      await fetch("http://127.0.0.1:5123/api/update-priority", {
+      const resp = await fetch("http://127.0.0.1:5123/api/update-priority", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ overrides: pendingPriority }),
+        mode: "cors",
       });
-    } catch {
-      // Silently fail if Flask is not running
+      const data = await resp.json();
+      if (resp.ok && data.status === "ok") {
+        setSaveMsg("✅ Saved to DB");
+      } else {
+        setSaveMsg(`❌ Server error: ${data.message || resp.statusText}`);
+        console.error("Save failed:", data);
+      }
+    } catch (e) {
+      setSaveMsg("❌ Could not reach Flask server");
+      console.error("Save network error:", e);
     }
+    setTimeout(() => setSaveMsg(null), 4000);
   }, [pendingStatus, pendingWebsite, pendingPriority]);
 
   const resetOverrides = useCallback(() => {
@@ -375,6 +387,9 @@ export default function DashboardPage() {
               >
                 Save
               </button>
+              {saveMsg && (
+                <span className="text-xs text-neutral-300">{saveMsg}</span>
+              )}
             </div>
             <DeployButton websiteOverrides={pendingWebsite} />
             <button
