@@ -1,44 +1,17 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { QRCodeSVG } from "qrcode.react";
+import { motion } from "framer-motion";
 import data from "../data/projects.json";
+import { JsonProject, UnifiedProject } from "./types";
+import { statusGradient, statusIcon, loadWebsiteOverrides } from "./lib/utils";
+import TagFilter from "./components/TagFilter";
+import ProjectCard from "./components/ProjectCard";
+import ProjectModal from "./components/ProjectModal";
+import AboutSection from "./components/AboutSection";
+import ContactSection from "./components/ContactSection";
 
-type JsonProject = {
-  id: number;
-  title: string;
-  description: string;
-  status: string;
-  parent_id: number | null;
-  show_on_website: boolean | number;
-  icon: string | null;
-  tags: string[];
-  content: string;
-  children?: JsonProject[];
-};
-
-type AcademicProject = {
-  title: string;
-  description: string;
-  tech: string[];
-  gradient: string;
-  icon: string;
-};
-
-type UnifiedProject = {
-  id: number;
-  title: string;
-  description: string;
-  status: string;
-  tags: string[];
-  gradient: string;
-  icon: string;
-  content?: string;
-  children?: JsonProject[];
-};
-
-const ACADEMIC: AcademicProject[] = [
+const ACADEMIC = [
   {
     title: "HiLiftPW-1 Grid Generation",
     description:
@@ -81,60 +54,6 @@ const ACADEMIC: AcademicProject[] = [
   },
 ];
 
-function statusGradient(status: string): string {
-  switch (status) {
-    case "done":
-      return "from-emerald-500/20 to-teal-600/20";
-    case "in-progress":
-      return "from-cyan-500/20 to-sky-600/20";
-    case "perpetual":
-      return "from-amber-500/20 to-orange-600/20";
-    default:
-      return "from-purple-500/20 to-fuchsia-600/20";
-  }
-}
-
-function statusBadgeClass(status: string): string {
-  switch (status) {
-    case "done":
-      return "bg-emerald-500/20 text-emerald-300 border-emerald-500/30";
-    case "in-progress":
-      return "bg-cyan-500/20 text-cyan-300 border-cyan-500/30";
-    case "perpetual":
-      return "bg-amber-500/20 text-amber-300 border-amber-500/30";
-    default:
-      return "bg-purple-500/20 text-purple-300 border-purple-500/30";
-  }
-}
-
-function statusIcon(status: string): string {
-  switch (status) {
-    case "done":
-      return "✅";
-    case "in-progress":
-      return "🔨";
-    case "perpetual":
-      return "♾️";
-    default:
-      return "💡";
-  }
-}
-
-// Merge academic + JSON projects
-function loadWebsiteOverrides(): Record<number, boolean> {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = localStorage.getItem("dashboard-website-overrides");
-    if (!raw) return {};
-    const parsed = JSON.parse(raw);
-    return Object.fromEntries(
-      Object.entries(parsed).map(([k, v]) => [Number(k), v === "true"])
-    );
-  } catch {
-    return {};
-  }
-}
-
 const ALL_JSON: JsonProject[] = data.items.filter(
   (it: JsonProject) => !it.parent_id && Boolean(it.show_on_website)
 );
@@ -158,50 +77,6 @@ const ALL_PROJECTS: UnifiedProject[] = [
   })),
 ];
 
-const journey = [
-  {
-    phase: "Now",
-    role: "MSc Researcher — CFD & Machine Learning",
-    detail:
-      "At Cranfield University, executing high-fidelity CFD simulations (ANSYS Fluent, OpenFOAM) and developing Neural Network-based surrogate models to accelerate aerodynamic design cycles.",
-  },
-  {
-    phase: "Recent",
-    role: "Thesis Researcher — AI-Enhanced Microfluidics",
-    detail:
-      "At BITS Pilani, designed a microfluidic sensor and developed AI-based detection algorithms using machine learning for real-time fluid analysis, bridging CFD with sensor technology.",
-  },
-  {
-    phase: "Education",
-    role: "MSc CFD @ Cranfield | Dual Degree @ BITS Pilani",
-    detail:
-      "MSc in Computational Fluid Dynamics (Cranfield, 2025–2026) and a 5-year dual degree in Physics + Mechanical Engineering (BITS Pilani, 2020–2025). Core focus: fluid mechanics, aerodynamics, HPC, and numerical methods.",
-  },
-];
-
-const skillCategories = [
-  {
-    name: "CFD & Simulation",
-    skills: ["OpenFOAM", "ANSYS Fluent", "Pointwise", "SpaceClaim", "Mesh Generation", "Turbulence Modelling", "CAD", "SolidWorks", "ParaView"],
-  },
-  {
-    name: "Programming & Data",
-    skills: ["Python", "MATLAB", "Fortran 90", "C / C++", "NumPy", "Pandas", "Matplotlib", "Git", "Linux"],
-  },
-  {
-    name: "Machine Learning",
-    skills: ["Neural Networks", "Surrogate Modeling", "Scikit-learn", "TensorFlow", "Keras", "Pattern Recognition"],
-  },
-  {
-    name: "Engineering & Analysis",
-    skills: ["Data Analysis", "Statistical Analysis", "Data Visualization", "HPC / MPI", "LaTeX", "MS Office"],
-  },
-  {
-    name: "Soft Skills",
-    skills: ["Problem-solving", "Technical Communication", "Independent Research", "Time Management", "Stakeholder Engagement"],
-  },
-];
-
 const fadeUp = {
   hidden: { opacity: 0, y: 18 },
   show: { opacity: 1, y: 0 },
@@ -217,7 +92,7 @@ export default function HomePage() {
     const visible = new Set(
       ALL_PROJECTS
         .filter((p) => {
-          if (p.id >= 100) return true; // academic projects always visible
+          if (p.id >= 100) return true;
           const jsonItem = ALL_JSON.find((it) => it.id === p.id);
           if (!jsonItem) return false;
           return overrides[p.id] ?? jsonItem.show_on_website;
@@ -306,320 +181,26 @@ export default function HomePage() {
           <p className="mt-2 text-violet-300">Selected builds and experiments from my personal workspace.</p>
         </motion.div>
 
-        {/* Tag filter */}
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          variants={fadeUp}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="mt-4"
-        >
-          <div className="flex flex-wrap gap-2 items-center">
-            <span className="text-xs text-neutral-500 mr-1">Filter:</span>
-            <button
-              onClick={() => setActiveTag(null)}
-              className={`text-xs px-2.5 py-1 rounded-full border transition ${
-                !activeTag
-                  ? "bg-violet-600 border-violet-500 text-white"
-                  : "border-purple-500/30 bg-purple-900/50 text-violet-300 hover:border-cyan-400/50"
-              }`}
-            >
-              All
-            </button>
-            {allTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => setActiveTag(tag === activeTag ? null : tag)}
-                className={`text-xs px-2.5 py-1 rounded-full border transition ${
-                  activeTag === tag
-                    ? "bg-violet-600 border-violet-500 text-white"
-                    : "border-purple-500/30 bg-purple-900/50 text-violet-300 hover:border-cyan-400/50"
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        </motion.div>
+        <TagFilter allTags={allTags} activeTag={activeTag} onChange={setActiveTag} />
 
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <AnimatePresence mode="popLayout">
-            {displayedProjects.map((project, index) => {
-              const isDimmed = dimmedProjects.has(project.id);
-              const isHidden = activeTag && !filteredProjects.some((p) => p.id === project.id);
-              if (isHidden) return null;
-
-              return (
-                <motion.article
-                  key={project.id}
-                  layout
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, amount: 0.25 }}
-                  variants={fadeUp}
-                  transition={{ duration: 0.45, delay: index * 0.05 }}
-                  onClick={() => setSelected(project)}
-                  className={`glass-card overflow-hidden transition cursor-pointer hover:border-purple-500/40 ${
-                    isDimmed ? "opacity-30" : "opacity-100"
-                  }`}
-                >
-                  <div className={`h-40 bg-gradient-to-br ${project.gradient} flex items-center justify-center relative`}>
-                    <span className="text-5xl select-none">{project.icon}</span>
-                    {project.status !== "done" && (
-                      <span className={`absolute top-3 right-3 text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusBadgeClass(project.status)}`}>
-                        {project.status}
-                      </span>
-                    )}
-                  </div>
-                  <div className="p-5">
-                    <h3 className="text-lg font-semibold text-white">{project.title}</h3>
-                    <p className="mt-2 text-sm text-violet-300">{project.description}</p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {project.tags.slice(0, 6).map((item) => (
-                        <span
-                          key={item}
-                          className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
-                            activeTag === item
-                              ? "border-cyan-400/50 bg-cyan-900/40 text-cyan-300"
-                              : "border-purple-500/30 bg-purple-900/50 text-fuchsia-300"
-                          }`}
-                        >
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.article>
-              );
-            })}
-          </AnimatePresence>
+          {displayedProjects.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              index={index}
+              isDimmed={dimmedProjects.has(project.id)}
+              isHidden={activeTag ? !filteredProjects.some((p) => p.id === project.id) : false}
+              activeTag={activeTag}
+              onClick={() => setSelected(project)}
+            />
+          ))}
         </div>
       </section>
 
-      {/* About */}
-      <section id="about" className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 pb-16 sm:px-6 md:grid-cols-5">
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          transition={{ duration: 0.5 }}
-          className="glass-card p-6 md:col-span-3"
-        >
-          <h2 className="text-2xl font-semibold text-white">Experience / About</h2>
-          <ol className="mt-6 space-y-5">
-            {journey.map((item) => (
-              <li key={item.phase} className="relative border-l border-purple-500/30 pl-4">
-                <span className="absolute -left-1.5 top-1 h-3 w-3 rounded-full bg-electric-blue" />
-                <p className="text-xs font-semibold uppercase tracking-widest text-electric-blue">{item.phase}</p>
-                <p className="mt-1 text-base font-medium text-white">{item.role}</p>
-                <p className="mt-1 text-sm text-violet-300">{item.detail}</p>
-              </li>
-            ))}
-          </ol>
-        </motion.div>
-
-        <motion.aside
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="glass-card p-6 md:col-span-2"
-        >
-          <h3 className="text-lg font-semibold text-white">Core Skills</h3>
-          <div className="mt-5 space-y-5">
-            {skillCategories.map((cat) => (
-              <div key={cat.name}>
-                <p className="text-xs font-semibold uppercase tracking-wider text-cyan-400">{cat.name}</p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {cat.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="rounded-lg border border-purple-500/30 bg-purple-900/50 px-3 py-1.5 text-sm text-violet-200 transition hover:border-cyan-400/50 hover:text-cyan-300"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.aside>
-
-        <motion.aside
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="glass-card p-6 md:col-span-2"
-        >
-          <h3 className="text-lg font-semibold text-white">Languages & Interests</h3>
-          <div className="mt-4 space-y-3 text-sm text-violet-300">
-            <div>
-              <p className="font-medium text-violet-200">Languages</p>
-              <p className="mt-1">English · Tamil · Hindi · Telugu · Spanish · Japanese</p>
-            </div>
-            <div>
-              <p className="font-medium text-violet-200">Interests</p>
-              <p className="mt-1">Formula 1 · Motorsport engineering · Aerodynamics · Renewable energy · Emerging tech</p>
-            </div>
-          </div>
-        </motion.aside>
-      </section>
-
-      {/* Contact */}
-      <footer id="connect" className="border-t border-purple-500/20 bg-[#05030a]/70">
-        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 py-12 sm:px-6 md:grid-cols-5">
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={fadeUp}
-            transition={{ duration: 0.45 }}
-            className="glass-card p-5 md:col-span-2"
-          >
-            <h3 className="text-lg font-semibold text-white">Scan to Connect</h3>
-            <div className="mt-4 flex h-44 items-center justify-center rounded-xl border border-purple-500/30 bg-white p-3">
-              <QRCodeSVG
-                value="https://www.linkedin.com/in/srivijayesh-venugopal-46780b215/"
-                size={152}
-                bgColor="#ffffff"
-                fgColor="#0f172a"
-                level="M"
-              />
-            </div>
-            <div className="mt-5 flex gap-3">
-              <a
-                href="https://www.linkedin.com/in/srivijayesh-venugopal-46780b215/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg border border-purple-500/30 px-3 py-2 text-sm text-violet-200 transition hover:border-cyan-400 hover:text-fuchsia-300"
-              >
-                LinkedIn
-              </a>
-              <a
-                href="https://github.com/Blueshadow0107"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg border border-purple-500/30 px-3 py-2 text-sm text-violet-200 transition hover:border-cyan-400 hover:text-fuchsia-300"
-              >
-                GitHub
-              </a>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={fadeUp}
-            transition={{ duration: 0.45, delay: 0.1 }}
-            className="glass-card space-y-4 p-5 md:col-span-3"
-          >
-            <h3 className="text-lg font-semibold text-white">Contact</h3>
-            <p className="text-sm text-violet-300">
-              Have a project in mind or just want to connect? Shoot me an email — I&apos;d love to hear from you.
-            </p>
-            <a
-              href="mailto:srivijayeshv@gmail.com?subject=Hello%20from%20your%20portfolio"
-              className="inline-block w-full rounded-xl bg-electric-blue px-5 py-3 text-center font-semibold text-white transition hover:bg-blue-500 sm:w-auto"
-            >
-              Email Me
-            </a>
-          </motion.div>
-        </div>
-      </footer>
-
-      <div className="border-t border-purple-500/20 bg-[#05030a] py-4 text-center text-xs text-violet-500">
-        © {new Date().getFullYear()} Srivijayesh Venugopal. Built with Next.js & Tailwind CSS.
-      </div>
-
-      {/* Detail Modal */}
-      <AnimatePresence>
-        {selected && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelected(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-neutral-900 border border-neutral-700 rounded-2xl shadow-2xl"
-            >
-              <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900/95 backdrop-blur-sm rounded-t-2xl">
-                <div>
-                  <h2 className="text-lg font-bold text-white">{selected.title}</h2>
-                  {selected.status !== "done" && (
-                    <span className={`inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusBadgeClass(selected.status)}`}>
-                      {selected.status}
-                    </span>
-                  )}
-                </div>
-                <button
-                  onClick={() => setSelected(null)}
-                  className="p-2 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
-                  aria-label="Close"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className="px-6 py-5 space-y-5">
-                {selected.description && (
-                  <p className="text-sm text-neutral-300 leading-relaxed">{selected.description}</p>
-                )}
-
-                {selected.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {selected.tags.map((tag) => (
-                      <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-neutral-800 text-neutral-300 border border-neutral-700">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {selected.content && (
-                  <div className="bg-neutral-950/50 border border-neutral-800 rounded-lg p-4">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-2">Notes</h3>
-                    <pre className="text-sm text-neutral-300 whitespace-pre-wrap font-mono leading-relaxed">{selected.content}</pre>
-                  </div>
-                )}
-
-                {selected.children && selected.children.length > 0 && (
-                  <div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-3">Sub-items</h3>
-                    <div className="space-y-2">
-                      {selected.children.map((child) => (
-                        <div key={child.id} className="flex items-center justify-between bg-neutral-950/50 border border-neutral-800 rounded-lg px-4 py-3">
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-neutral-200 truncate">{child.title}</p>
-                            {child.description && (
-                              <p className="text-xs text-neutral-500 truncate mt-0.5">{child.description}</p>
-                            )}
-                          </div>
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusBadgeClass(child.status)}`}>
-                            {child.status}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <AboutSection />
+      <ContactSection />
+      <ProjectModal project={selected} onClose={() => setSelected(null)} />
     </main>
   );
 }
