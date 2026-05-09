@@ -11,6 +11,7 @@ type Project = {
   description: string;
   type: string;
   status: string;
+  priority: number | null;
   parent_id: number | null;
   show_on_website: boolean | number;
   icon: string | null;
@@ -31,6 +32,7 @@ type ColumnDef = {
 };
 
 type StatusKey = "idea" | "in-progress" | "done" | "perpetual";
+type ViewMode = "all" | "personal" | "academic";
 
 const COLUMNS: ColumnDef[] = [
   {
@@ -65,8 +67,17 @@ const COLUMNS: ColumnDef[] = [
 
 const STATUS_KEY = "dashboard-status-overrides";
 const WEBSITE_KEY = "dashboard-website-overrides";
+const VIEW_MODE_KEY = "dashboard-view-mode";
 const ALL_ITEMS: Project[] = data.items;
 const TOP_LEVEL = ALL_ITEMS.filter((it) => !it.parent_id);
+
+const PRIORITY_LABELS: Record<number, { label: string; color: string }> = {
+  1: { label: "🔴 Critical", color: "bg-red-500/20 text-red-300 border-red-500/30" },
+  2: { label: "🟠 High", color: "bg-orange-500/20 text-orange-300 border-orange-500/30" },
+  3: { label: "🟡 Normal", color: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" },
+  4: { label: "🟢 Low", color: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30" },
+  5: { label: "⚪ Icebox", color: "bg-neutral-500/20 text-neutral-400 border-neutral-500/30" },
+};
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-GB", {
@@ -116,6 +127,26 @@ function loadJson(key: string): Record<number, string> {
 function saveJson(key: string, value: Record<number, string>) {
   if (typeof window === "undefined") return;
   localStorage.setItem(key, JSON.stringify(value));
+}
+
+function loadViewMode(): ViewMode {
+  if (typeof window === "undefined") return "all";
+  try {
+    const raw = localStorage.getItem(VIEW_MODE_KEY);
+    if (raw === "personal" || raw === "academic") return raw;
+    return "all";
+  } catch {
+    return "all";
+  }
+}
+
+function saveViewMode(mode: ViewMode) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(VIEW_MODE_KEY, mode);
+}
+
+function isAcademic(item: Project): boolean {
+  return item.tags.some((t) => t.toLowerCase() === "academic");
 }
 
 function DeployButton({ websiteOverrides }: { websiteOverrides: Record<number, string> }) {
@@ -175,14 +206,17 @@ export default function DashboardPage() {
   const [pendingWebsite, setPendingWebsite] = useState<Record<number, string>>({});
   const [selected, setSelected] = useState<Project | null>(null);
   const [dragOverCol, setDragOverCol] = useState<StatusKey | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("all");
 
   useEffect(() => {
     const st = loadJson(STATUS_KEY);
     const ws = loadJson(WEBSITE_KEY);
+    const vm = loadViewMode();
     setSavedStatus(st);
     setPendingStatus(st);
     setSavedWebsite(ws);
     setPendingWebsite(ws);
+    setViewMode(vm);
     setItems(
       TOP_LEVEL.map((it) => ({
         ...it,
@@ -254,11 +288,22 @@ export default function DashboardPage() {
     setItems(TOP_LEVEL);
   }, []);
 
+  const handleViewMode = useCallback((mode: ViewMode) => {
+    setViewMode(mode);
+    saveViewMode(mode);
+  }, []);
+
   const isWebsiteVisible = (item: Project) => {
     const original = TOP_LEVEL.find((it) => it.id === item.id)?.show_on_website ?? false;
     const override = pendingWebsite[item.id];
     return override !== undefined ? override === "true" : original;
   };
+
+  const filteredItems = items.filter((it) => {
+    if (viewMode === "academic") return isAcademic(it);
+    if (viewMode === "personal") return !isAcademic(it);
+    return true;
+  });
 
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-100">
@@ -270,7 +315,7 @@ export default function DashboardPage() {
               Project Tracker
             </h1>
             <p className="text-sm text-neutral-400 mt-0.5">
-              {items.length} projects · synced {formatDate(data.generated_at)}
+              {filteredItems.length} projects · synced {formatDate(data.generated_at)}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -307,13 +352,39 @@ export default function DashboardPage() {
             </Link>
           </div>
         </div>
+
+        {/* View mode toggle */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-neutral-500 mr-1">View:</span>
+            {[
+              { key: "all" as ViewMode, label: "All", count: items.length },
+              { key: "personal" as ViewMode, label: "Personal", count: items.filter((it) => !isAcademic(it)).length },
+              { key: "academic" as ViewMode, label: "Academic", count: items.filter((it) => isAcademic(it)).length },
+            ].map((vm) => (
+              <button
+                key={vm.key}
+                onClick={() => handleViewMode(vm.key)}
+                className={`text-xs px-3 py-1 rounded-lg border transition-colors font-medium ${
+                  viewMode === vm.key
+                    ? "bg-violet-600 border-violet-500 text-white"
+                    : "border-neutral-700 text-neutral-400 hover:text-neutral-200 hover:border-neutral-500"
+                }`}
+              >
+                {vm.label} ({vm.count})
+              </button>
+            ))}
+          </div>
+        </div>
       </header>
 
       {/* Board */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
           {COLUMNS.map((col, colIndex) => {
-            const colItems = items.filter((it) => it.status === col.key);
+            const colItems = filteredItems
+              .filter((it) => it.status === col.key)
+              .sort((a, b) => (a.priority ?? 3) - (b.priority ?? 3));
             const isDragOver = dragOverCol === col.key;
 
             return (
@@ -355,6 +426,9 @@ export default function DashboardPage() {
                     const statusChanged = pendingStatus[item.id] !== undefined && pendingStatus[item.id] !== savedStatus[item.id];
                     const websiteChanged = pendingWebsite[item.id] !== undefined && pendingWebsite[item.id] !== savedWebsite[item.id];
                     const isChanged = statusChanged || websiteChanged;
+                    const p = item.priority ?? 3;
+                    const pInfo = PRIORITY_LABELS[p] || PRIORITY_LABELS[3];
+                    const academic = isAcademic(item);
 
                     return (
                       <motion.article
@@ -388,7 +462,15 @@ export default function DashboardPage() {
                             {item.icon ? <span className="mr-1.5">{item.icon}</span> : null}
                             {item.title}
                           </h3>
-                          <div className="flex items-center gap-1.5 shrink-0">
+                          <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
+                            {academic && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                                🎓
+                              </span>
+                            )}
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded border ${pInfo.color}`}>
+                              {p}
+                            </span>
                             {onWeb && (
                               <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
                                 🌐
@@ -474,10 +556,20 @@ export default function DashboardPage() {
               <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-900/95 backdrop-blur-sm rounded-t-2xl">
                 <div>
                   <h2 className="text-lg font-bold text-white">
+                    {selected.icon ? <span className="mr-2">{selected.icon}</span> : null}
                     {selected.title}
                   </h2>
-                  <p className="text-xs text-neutral-400 mt-0.5">
-                    {formatDateTime(selected.created_at)} · {selected.status}
+                  <p className="text-xs text-neutral-400 mt-0.5 flex items-center gap-2">
+                    <span>{formatDateTime(selected.created_at)}</span>
+                    <span>·</span>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded border ${(PRIORITY_LABELS[selected.priority ?? 3] || PRIORITY_LABELS[3]).color}`}>
+                      {(PRIORITY_LABELS[selected.priority ?? 3] || PRIORITY_LABELS[3]).label}
+                    </span>
+                    {isAcademic(selected) && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                        🎓 Academic
+                      </span>
+                    )}
                   </p>
                 </div>
                 <button

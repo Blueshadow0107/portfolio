@@ -1,7 +1,124 @@
 {
-  "generated_at": "2026-05-09T01:27:49.566491",
-  "count": 39,
+  "generated_at": "2026-05-09T01:41:04.536426",
+  "count": 44,
   "items": [
+    {
+      "id": 44,
+      "title": "Lid-Driven Cavity Flow Solver",
+      "description": "Built a 2D incompressible Navier-Stokes solver using SIMPLE + TDMA on a staggered grid. Validated against Ghia et al. (1982) at Re = 100\u20131000, with grid convergence studies and central-difference comparison.",
+      "type": "note",
+      "content": "Academic project: Incompressible NS solver from scratch in Fortran 90. Staggered grid, SIMPLE algorithm, TDMA line solver. Validated against Ghia et al. benchmark. Grid convergence at Re = 100, 400, 1000.",
+      "file_name": null,
+      "created_at": "2026-05-09T01:41:00.998733",
+      "updated_at": "2026-05-09T01:41:00.998733",
+      "status": "done",
+      "parent_id": null,
+      "show_on_website": false,
+      "icon": "\ud83c\udf00",
+      "priority": 3,
+      "tags": [
+        "academic",
+        "cfd",
+        "fortran",
+        "incompressible",
+        "navier-stokes"
+      ],
+      "children": []
+    },
+    {
+      "id": 43,
+      "title": "Dual-Mission UAV Design",
+      "description": "Group design project: convertible fixed-wing / quad-rotor UAV concept. CFD hover validation, grid-convergence study (~2M / 5M / 10M cells), RPM parametric study, and turbulence model comparison.",
+      "type": "note",
+      "content": "Academic group design project at Cranfield. Convertible UAV with vertical take-off and fixed-wing cruise. ANSYS Fluent CFD for hover validation, grid convergence, and parametric studies.",
+      "file_name": null,
+      "created_at": "2026-05-09T01:41:00.996320",
+      "updated_at": "2026-05-09T01:41:00.996320",
+      "status": "done",
+      "parent_id": null,
+      "show_on_website": false,
+      "icon": "\ud83d\udef8",
+      "priority": 3,
+      "tags": [
+        "academic",
+        "cfd",
+        "fluent",
+        "matlab",
+        "openvsp",
+        "uav"
+      ],
+      "children": []
+    },
+    {
+      "id": 42,
+      "title": "Compressible Flow Solver",
+      "description": "Implemented a 1D Euler solver with Minmod slope limiting and HLL/HLLC Riemann solvers. Analysed 2D UCNS3D results for Riemann problems, Mach 3 forward-facing step, and double Mach reflection.",
+      "type": "note",
+      "content": "Academic project: Compressible flow solver development. 1D Euler with TVD limiters and approximate Riemann solvers. Validation against analytical and high-resolution UCNS3D results.",
+      "file_name": null,
+      "created_at": "2026-05-09T01:41:00.994628",
+      "updated_at": "2026-05-09T01:41:00.994628",
+      "status": "done",
+      "parent_id": null,
+      "show_on_website": false,
+      "icon": "\ud83c\udf0a",
+      "priority": 3,
+      "tags": [
+        "academic",
+        "cfd",
+        "compressible-flow",
+        "fortran",
+        "ucns3d"
+      ],
+      "children": []
+    },
+    {
+      "id": 41,
+      "title": "Numerical Methods & HPC Analysis",
+      "description": "Implemented and analysed FTCS, Upwind, Lax-Friedrichs and Lax-Wendroff schemes for 1D advection. Performed parallel scaling and carbon-footprint assessment of UCNS3D on Cranfield HPC clusters.",
+      "type": "note",
+      "content": "Academic project: 1D advection solver comparisons and HPC benchmarking. Implemented explicit finite difference schemes in Fortran 90. Profiled UCNS3D strong/weak scaling and energy consumption.",
+      "file_name": null,
+      "created_at": "2026-05-09T01:41:00.992733",
+      "updated_at": "2026-05-09T01:41:00.992733",
+      "status": "done",
+      "parent_id": null,
+      "show_on_website": false,
+      "icon": "\ud83d\udcca",
+      "priority": 3,
+      "tags": [
+        "academic",
+        "cfd",
+        "fortran",
+        "hpc",
+        "mpi",
+        "ucns3d"
+      ],
+      "children": []
+    },
+    {
+      "id": 40,
+      "title": "HiLiftPW-1 Grid Generation",
+      "description": "Generated a 24.6M-cell hybrid-unstructured mesh for the NASA Trapezoidal Wing (HiLiftPW-1) using Pointwise T-Rex. Targeted y+ ~ 1 at Re = 7.5M with 30 prism layers and structured wake refinement.",
+      "type": "note",
+      "content": "Academic project: CFD mesh generation for High-Lift Prediction Workshop. Used Pointwise T-Rex for anisotropic tetrahedral extrusion with 30 prism layers. Achieved y+ ~ 1 for Re = 7.5M.",
+      "file_name": null,
+      "created_at": "2026-05-09T01:41:00.988767",
+      "updated_at": "2026-05-09T01:41:00.988767",
+      "status": "done",
+      "parent_id": null,
+      "show_on_website": false,
+      "icon": "\u2708\ufe0f",
+      "priority": 3,
+      "tags": [
+        "academic",
+        "cfd",
+        "fluent",
+        "mesh-generation",
+        "pointwise"
+      ],
+      "children": []
+    },
     {
       "id": 27,
       "title": "Suspend/Resume Debug Log",
@@ -15,6 +132,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "config",
         "linux",
@@ -36,6 +154,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udccb",
+      "priority": 3,
       "tags": [
         "convention",
         "log",
@@ -56,6 +175,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "game-dev",
         "log",
@@ -76,6 +196,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "academic",
         "assignment",
@@ -99,6 +220,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "academic",
         "assignment",
@@ -122,6 +244,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "academic",
         "assignment",
@@ -145,6 +268,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "academic",
         "assignment",
@@ -168,6 +292,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "academic",
         "cfd",
@@ -191,6 +316,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "config",
         "linux",
@@ -212,6 +338,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "config",
         "linux",
@@ -233,6 +360,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "config",
         "linux",
@@ -254,6 +382,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "config",
         "linux",
@@ -275,6 +404,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "config",
         "linux",
@@ -296,6 +426,7 @@
       "parent_id": null,
       "show_on_website": true,
       "icon": "\ud83d\udcdd",
+      "priority": 3,
       "tags": [
         "dashboard",
         "flask",
@@ -321,6 +452,7 @@
       "parent_id": 3,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "manim",
         "youtube"
@@ -340,6 +472,7 @@
       "parent_id": 3,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "manim",
         "youtube"
@@ -359,6 +492,7 @@
       "parent_id": 3,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "manim",
         "youtube"
@@ -378,6 +512,7 @@
       "parent_id": 3,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "manim",
         "youtube"
@@ -397,6 +532,7 @@
       "parent_id": 4,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "music",
         "sonic-pi"
@@ -416,6 +552,7 @@
       "parent_id": 4,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "music",
         "sonic-pi"
@@ -435,6 +572,7 @@
       "parent_id": 4,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "music",
         "sonic-pi"
@@ -454,6 +592,7 @@
       "parent_id": 2,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "gba",
         "pokemon"
@@ -473,6 +612,7 @@
       "parent_id": 2,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "gba",
         "pokemon"
@@ -492,6 +632,7 @@
       "parent_id": 2,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "gba",
         "pokemon"
@@ -511,6 +652,7 @@
       "parent_id": 1,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "frontend",
         "rpg-engine"
@@ -530,6 +672,7 @@
       "parent_id": 1,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "frontend",
         "rpg-engine"
@@ -549,6 +692,7 @@
       "parent_id": 1,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "frontend",
         "rpg-engine"
@@ -568,6 +712,7 @@
       "parent_id": 1,
       "show_on_website": false,
       "icon": null,
+      "priority": 3,
       "tags": [
         "frontend",
         "rpg-engine"
@@ -587,6 +732,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\uddc3\ufe0f",
+      "priority": 3,
       "tags": [
         "database",
         "flask",
@@ -610,6 +756,7 @@
       "parent_id": null,
       "show_on_website": true,
       "icon": "\ud83e\uddca",
+      "priority": 3,
       "tags": [
         "cad",
         "cadquery",
@@ -634,6 +781,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\u26cf\ufe0f",
+      "priority": 3,
       "tags": [
         "future-project",
         "gamedev",
@@ -656,6 +804,7 @@
       "parent_id": null,
       "show_on_website": true,
       "icon": "\ud83d\udcf1",
+      "priority": 3,
       "tags": [
         "kde-connect",
         "linux",
@@ -678,6 +827,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83c\udf10",
+      "priority": 3,
       "tags": [
         "nextjs",
         "react",
@@ -699,6 +849,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udd49\ufe0f",
+      "priority": 3,
       "tags": [
         "hinduism",
         "philosophy",
@@ -721,6 +872,7 @@
       "parent_id": null,
       "show_on_website": true,
       "icon": "\ud83d\udc27",
+      "priority": 3,
       "tags": [
         "dotfiles",
         "hyprland",
@@ -742,6 +894,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83c\udfb5",
+      "priority": 3,
       "tags": [
         "live-coding",
         "music",
@@ -762,6 +915,7 @@
           "parent_id": 4,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "music",
             "sonic-pi"
@@ -780,6 +934,7 @@
           "parent_id": 4,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "music",
             "sonic-pi"
@@ -798,6 +953,7 @@
           "parent_id": 4,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "music",
             "sonic-pi"
@@ -818,6 +974,7 @@
       "parent_id": null,
       "show_on_website": false,
       "icon": "\ud83d\udcd0",
+      "priority": 3,
       "tags": [
         "education",
         "manim",
@@ -839,6 +996,7 @@
           "parent_id": 3,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "manim",
             "youtube"
@@ -857,6 +1015,7 @@
           "parent_id": 3,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "manim",
             "youtube"
@@ -875,6 +1034,7 @@
           "parent_id": 3,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "manim",
             "youtube"
@@ -893,6 +1053,7 @@
           "parent_id": 3,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "manim",
             "youtube"
@@ -913,6 +1074,7 @@
       "parent_id": null,
       "show_on_website": true,
       "icon": "\ud83c\udfae",
+      "priority": 3,
       "tags": [
         "asm",
         "c",
@@ -934,6 +1096,7 @@
           "parent_id": 2,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "gba",
             "pokemon"
@@ -952,6 +1115,7 @@
           "parent_id": 2,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "gba",
             "pokemon"
@@ -970,6 +1134,7 @@
           "parent_id": 2,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "gba",
             "pokemon"
@@ -990,6 +1155,7 @@
       "parent_id": null,
       "show_on_website": true,
       "icon": "\ud83d\uddfa\ufe0f",
+      "priority": 3,
       "tags": [
         "canvas",
         "flask",
@@ -1011,6 +1177,7 @@
           "parent_id": 1,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "frontend",
             "rpg-engine"
@@ -1029,6 +1196,7 @@
           "parent_id": 1,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "frontend",
             "rpg-engine"
@@ -1047,6 +1215,7 @@
           "parent_id": 1,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "frontend",
             "rpg-engine"
@@ -1065,6 +1234,7 @@
           "parent_id": 1,
           "show_on_website": 0,
           "icon": null,
+          "priority": 3,
           "tags": [
             "frontend",
             "rpg-engine"
