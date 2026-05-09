@@ -361,24 +361,21 @@ export default function DashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <AnimatePresence>
+            <div className="flex items-center gap-2">
               {hasUnsaved && (
-                <motion.div
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
-                  className="flex items-center gap-2"
-                >
-                  <span className="text-xs text-amber-400">Unsaved changes</span>
-                  <button
-                    onClick={saveChanges}
-                    className="text-xs px-3 py-1.5 rounded-lg bg-violet-600 text-white hover:bg-violet-500 transition-colors font-medium"
-                  >
-                    Save
-                  </button>
-                </motion.div>
+                <span className="text-xs text-amber-400">Unsaved</span>
               )}
-            </AnimatePresence>
+              <button
+                onClick={saveChanges}
+                className={`text-xs px-3 py-1.5 rounded-lg transition-colors font-medium ${
+                  hasUnsaved
+                    ? "bg-violet-600 text-white hover:bg-violet-500"
+                    : "bg-neutral-800 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-700"
+                }`}
+              >
+                Save
+              </button>
+            </div>
             <DeployButton websiteOverrides={pendingWebsite} />
             <button
               onClick={resetOverrides}
