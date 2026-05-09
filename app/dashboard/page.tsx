@@ -384,7 +384,12 @@ export default function DashboardPage() {
           {COLUMNS.map((col, colIndex) => {
             const colItems = filteredItems
               .filter((it) => it.status === col.key)
-              .sort((a, b) => (a.priority ?? 3) - (b.priority ?? 3));
+              .sort((a, b) => {
+                if (col.key === "done" || col.key === "perpetual") {
+                  return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+                }
+                return (a.priority ?? 3) - (b.priority ?? 3);
+              });
             const isDragOver = dragOverCol === col.key;
 
             return (
@@ -468,9 +473,11 @@ export default function DashboardPage() {
                                 🎓
                               </span>
                             )}
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded border ${pInfo.color}`}>
-                              {p}
-                            </span>
+                            {(col.key === "idea" || col.key === "in-progress") && (
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded border ${pInfo.color}`}>
+                                {p}
+                              </span>
+                            )}
                             {onWeb && (
                               <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
                                 🌐
