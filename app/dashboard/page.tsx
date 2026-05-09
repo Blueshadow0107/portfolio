@@ -150,7 +150,7 @@ function isAcademic(item: Project): boolean {
   return item.tags.some((t) => t.toLowerCase() === "academic");
 }
 
-function DeployButton({ websiteOverrides, priorityOverrides }: { websiteOverrides: Record<number, string>; priorityOverrides: Record<number, string> }) {
+function DeployButton({ websiteOverrides }: { websiteOverrides: Record<number, string> }) {
   const [deploying, setDeploying] = useState(false);
   const [deployMsg, setDeployMsg] = useState<string | null>(null);
 
@@ -161,7 +161,7 @@ function DeployButton({ websiteOverrides, priorityOverrides }: { websiteOverride
       const res = await fetch("http://127.0.0.1:5123/deploy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ websiteOverrides, priorityOverrides }),
+        body: JSON.stringify({ websiteOverrides }),
       });
       const data = await res.json();
       if (data.status === "ok" && data.returncode === 0) {
@@ -369,7 +369,7 @@ export default function DashboardPage() {
                 </motion.div>
               )}
             </AnimatePresence>
-            <DeployButton websiteOverrides={pendingWebsite} priorityOverrides={pendingPriority} />
+            <DeployButton websiteOverrides={pendingWebsite} />
             <button
               onClick={resetOverrides}
               className="text-xs px-3 py-1.5 rounded-lg border border-neutral-700 text-neutral-400 hover:text-neutral-200 hover:border-neutral-500 transition-colors"
