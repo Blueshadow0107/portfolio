@@ -1,7 +1,28 @@
 {
-  "generated_at": "2026-05-09T01:23:52.885667",
+  "generated_at": "2026-05-09T01:27:49.566491",
   "count": 39,
   "items": [
+    {
+      "id": 27,
+      "title": "Suspend/Resume Debug Log",
+      "description": "Troubleshooting journal for Lenovo LOQ laptop failing to resume from suspend on Ubuntu/Hyprland with RTX 4060. Documents applied fixes and untested hypotheses.",
+      "type": "note",
+      "content": "in-progress",
+      "file_name": null,
+      "created_at": "2026-05-09T01:23:20.502151",
+      "updated_at": "2026-05-09T01:27:38.571196",
+      "status": "in-progress",
+      "parent_id": null,
+      "show_on_website": false,
+      "icon": "\ud83d\udcdd",
+      "tags": [
+        "config",
+        "linux",
+        "log",
+        "setup"
+      ],
+      "children": []
+    },
     {
       "id": 39,
       "title": "Logging Convention \u2014 How to Log Work",
@@ -250,27 +271,6 @@
       "file_name": null,
       "created_at": "2026-05-09T01:23:20.506650",
       "updated_at": "2026-05-09T01:23:20.506650",
-      "status": "done",
-      "parent_id": null,
-      "show_on_website": false,
-      "icon": "\ud83d\udcdd",
-      "tags": [
-        "config",
-        "linux",
-        "log",
-        "setup"
-      ],
-      "children": []
-    },
-    {
-      "id": 27,
-      "title": "Suspend/Resume Debug Log",
-      "description": "Troubleshooting journal for Lenovo LOQ laptop failing to resume from suspend on Ubuntu/Hyprland with RTX 4060. Documents applied fixes and untested hypotheses.",
-      "type": "note",
-      "content": "# Suspend/Resume Debug Log \u2014 Lenovo LOQ 15ARP9\n\n> **Status:** Paused \u2014 awaiting next troubleshooting round  \n> **Last updated:** 2026-04-29  \n> **System:** Lenovo LOQ 15ARP9 (83JC) | AMD Ryzen 7 7435HS | NVIDIA RTX 4060 Laptop  \n> **OS:** Ubuntu-based, kernel 6.17.0-22-generic, Hyprland (Wayland)  \n> **Driver:** NVIDIA 580.126.09 (open kernel module)  \n\n---\n\n## Problem Statement\n\nSuspend (triggered via Waybar power menu \u2192 wlogout \u2192 `systemctl suspend`) does not resume properly. The system enters sleep but the display never re-initializes, requiring a hard reboot.\n\n**Key symptom:** Keyboard backlight lights up on wake attempt, but screen remains black. The system is alive \u2014 this is a **display re-initialization failure**, not a firmware/CPU hang.\n\n---\n\n## Hardware / Firmware Profile\n\n| Component | Detail |\n|-----------|--------|\n| Laptop | Lenovo LOQ 15ARP9 (DMI: `LENOVO 83JC/LNVNB161216`) |\n| CPU | AMD Ryzen 7 7435HS (Phoenix 2) |\n| dGPU | NVIDIA GeForce RTX 4060 Max-Q / Mobile (AD107M) |\n| iGPU | Disabled in firmware \u2014 not visible to OS (`amdgpu` not loaded) |\n| BIOS | `PQCN24WW` (dated 2025-06-02) |\n| Sleep states available | `s2idle` only \u2014 `[s2idle]` in `/sys/power/mem_sleep`. No `deep` (S3) support. |\n| Wake sources | Power button, lid switch, ELAN trackpad, USB XHCI controllers, PCIe bridges |\n\n---\n\n## Key Findings\n\n### 1. ACPI Firmware Bugs on NVIDIA GPU\nRepeated on every boot:\n```\nACPI BIOS Error (bug): Could not resolve symbol [\\_SB.PCI0.GPP0.PEGP.GPS.NVD1], AE_NOT_FOUND\nACPI Error: Aborting method \\_SB.PCI0.GPP0.PEGP.GPS due to previous error (AE_NOT_FOUND)\nACPI Error: Aborting method \\_SB.PCI0.GPP0.PEGP._DSM due to previous error (AE_NOT_FOUND)\n```\nThe `_DSM` (Device Specific Method) used by the NVIDIA driver for ACPI power management is broken. The firmware references `NVD1` which does not exist.\n\n### 2. `EnableS0ixPowerManagement` Was Not Loading\nDespite adding `options nvidia NVreg_EnableS0ixPowerManagement=1` to `/etc/modprobe.d/nvidia-sleep.conf`, `/proc/driver/nvidia/params` showed `EnableS0ixPowerManagement: 0` after reboot.\n\n**Root cause:** The NVIDIA kernel module is loaded from the initramfs during early boot. The initramfs contained a stale copy of the modprobe config from before the change.\n\n**Fix applied:** `sudo update-initramfs -u` to regenerate the initramfs. **Confirmed working** \u2014 after reboot, `EnableS0ixPowerManagement: 1`.\n\n### 3. Broken Custom `nvidia-resume.service` Override\n`/etc/systemd/system/nvidia-resume.service` was a failed previous manual fix. It only ran `modprobe nvidia nvidia_modeset nvidia_drm` instead of the stock `/usr/bin/nvidia-sleep.sh \"resume\"`.\n\n**Fix applied:** Removed the override so systemd falls back to `/usr/lib/systemd/system/nvidia-resume.service` (stock NVIDIA package version).\n\n### 4. NVIDIA Sleep Scripts Complete Before System Suspend\nJournal logs confirm `nvidia-suspend.service` finishes successfully before `systemd-suspend.service` begins. The system enters s2idle cleanly. The failure happens during **resume display re-initialization**.\n\n### 5. `s2idle` Only \u2014 No S3/Deep Sleep\n`/sys/power/mem_sleep` shows only `[s2idle]`. The laptop uses Modern Standby (s0ix). The NVIDIA sleep scripts (`nvidia-sleep.sh`) were originally designed for S3 suspend, not s2idle.\n\n---\n\n## Chronological Change Log\n\n### Change 1 \u2014 Fixed `nvidia-resume.service`\n- **What:** Removed broken custom `/etc/systemd/system/nvidia-resume.service` override.\n- **Result:** Systemd now uses stock NVIDIA package service.\n- **Suspend test:** \u274c Still fails to resume (black screen).\n\n### Change 2 \u2014 Added `NVreg_EnableS0ixPowerManagement=1`\n- **What:** Added to `/etc/modprobe.d/nvidia-sleep.conf`.\n- **Result:** Parameter not active after reboot because initramfs was stale.\n- **Suspend test:** \u274c Still fails.\n\n### Change 3 \u2014 Regenerated initramfs + `acpi_sleep=nonvs`\n- **What:** `sudo update-initramfs -u` + added `acpi_sleep=nonvs` to kernel cmdline.\n- **Result:** `EnableS0ixPowerManagement: 1` confirmed active.\n- **Suspend test:** \u274c Still fails (black screen on resume).\n\n### Change 4 \u2014 `acpi_osi=! acpi_osi=\"Linux\"` (REVERTED)\n- **What:** Added ACPI workaround to GRUB cmdline.\n- **Result:** Broke trackpad (ELAN I2C device failed to probe). Reverted immediately.\n- **Suspend test:** N/A \u2014 reverted before testing.\n\n### Change 5 \u2014 Hypridle `after_sleep_cmd` delay\n- **What:** Changed `after_sleep_cmd = hyprctl dispatch dpms on` to `sleep 2 && hyprctl dispatch dpms on` in `~/.config/hypr/hypridle.conf`.\n- **Result:** Still in place. Gives NVIDIA driver time to re-init display before Hyprland forces DPMS on.\n- **Suspend test:** Inconclusive \u2014 tested alongside other changes.\n\n---\n\n## Current System State\n\n### GRUB Kernel Parameters\n```\nacpi_sleep=nonvs rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nvidia-drm.modeset=1 rcutree.rcu_idle_gp_delay=1 quiet splash nvidia-drm.modeset=1 vt.handoff=7\n```\n\n### NVIDIA Module Parameters (active)\n```\nPreserveVideoMemoryAllocations: 1\nEnableS0ixPowerManagement: 1\nS0ixPowerManagementVideoMemoryThreshold: 256\nDynamicPowerManagement: 3\nDynamicPowerManagementVideoMemoryThreshold: 200\n```\n\n### NVIDIA Modprobe Files\n- `/etc/modprobe.d/nvidia-sleep.conf` \u2014 contains `NVreg_EnableS0ixPowerManagement=1`\n- `/etc/modprobe.d/nvidia-graphics-drivers-kms.conf` \u2014 generated by nvidia-driver-580\n- `/etc/modprobe.d/nvidia.conf` \u2014 has `fbdev=1`\n- `/etc/modprobe.d/nvidia-sleep.conf.backup` \u2014 previous config with `PowerMizer` settings\n\n### Systemd Sleep Services\n- `nvidia-suspend.service` \u2014 enabled, triggers before `systemd-suspend.service`\n- `nvidia-resume.service` \u2014 enabled, triggers after `suspend.target` (stock version)\n- `nvidia-hibernate.service` \u2014 enabled\n\n### Hypridle Config (`~/.config/hypr/hypridle.conf`)\n- `before_sleep_cmd = loginctl lock-session`\n- `after_sleep_cmd = sleep 2 && hyprctl dispatch dpms on`\n- Suspend listener is **commented out** (disabled by default)\n\n---\n\n## Untested Hypotheses / Next Steps\n\n### Hypothesis A: NVIDIA sleep scripts conflict with s2idle\nThe `nvidia-sleep.sh` script does `chvt 63` before suspend and restores VT on resume. With `EnableS0ixPowerManagement=1`, the driver handles s2idle internally \u2014 the explicit script VT switching may be fighting the driver's internal logic.\n\n**Suggested test:** Disable `nvidia-suspend.service`, `nvidia-resume.service`, and `nvidia-hibernate.service` by removing their `.wants` symlinks:\n```bash\nsudo rm /etc/systemd/system/systemd-suspend.service.wants/nvidia-suspend.service\nsudo rm /etc/systemd/system/suspend.target.wants/nvidia-resume.service\nsudo rm /etc/systemd/system/systemd-hibernate.service.wants/nvidia-hibernate.service\nsudo systemctl daemon-reload\n```\nThen reboot and test suspend.\n\n**Risk:** Low. Scripts can be re-enabled by recreating the symlinks.\n\n### Hypothesis B: `DynamicPowerManagement=3` incompatible with s2idle\nThe default adaptive power management (`DynamicPowerManagement: 3`) may not play well with s2idle on this firmware.\n\n**Suggested test:** Add `options nvidia NVreg_DynamicPowerManagement=0x02` to modprobe config and reboot.\n\n### Hypothesis C: PCIe ASPM causing resume display hang\nPCIe Active State Power Management can cause NVIDIA GPUs to fail to re-initialize the display after resume.\n\n**Suggested test:** Add `pcie_aspm=off` to GRUB cmdline.\n\n### Hypothesis D: IOMMU (AMD-Vi) interfering with GPU resume\nAMD-Vi IOMMU is active (`Translated` domain). On some systems, IOMMU causes display re-init failures after s2idle.\n\n**Suggested test:** Add `amd_iommu=off` or `iommu=pt` to GRUB cmdline.\n\n### Hypothesis E: Hyprland/Wayland loses DRM master on resume\nEven without the NVIDIA scripts, the Wayland compositor may fail to reclaim the display.\n\n**Suggested test:** Try switching VTs manually after a black-screen resume (`Ctrl+Alt+F3` then `Ctrl+Alt+F1/F2`) before hard-rebooting. If this brings the display back, the issue is DRM master / session recovery.\n\n### Hypothesis F: BIOS update needed\nLenovo may have released a newer BIOS that fixes the ACPI _DSM errors or s2idle behavior.\n\n**Suggested test:** Check Lenovo Vantage / `fwupdmgr` for BIOS updates.\n\n---\n\n## Quick Recovery Reference\n\nIf the display stays black after suspend but the keyboard lights up:\n1. Try `Ctrl+Alt+F3` then `Ctrl+Alt+F1` or `Ctrl+Alt+F2` to cycle VTs.\n2. If that fails, hard-reboot with power button.\n3. After reboot, check `journalctl -b -1 | grep -iE \"suspend|resume|nvidia|PM:\"` for clues.\n\n---\n\n## Files Modified During Debugging\n\n| File | Current State |\n|------|---------------|\n| `/etc/systemd/system/nvidia-resume.service` | **Removed** \u2014 falls back to stock `/usr/lib/systemd/system/nvidia-resume.service` |\n| `/etc/modprobe.d/nvidia-sleep.conf` | Contains `NVreg_EnableS0ixPowerManagement=1` |\n| `/etc/default/grub` | Has `acpi_sleep=nonvs` in `GRUB_CMDLINE_LINUX` |\n| `~/.config/hypr/hypridle.conf` | `after_sleep_cmd = sleep 2 && hyprctl dispatch dpms on` |\n| `/boot/initrd.img-6.17.0-22-generic` | Regenerated with updated nvidia-sleep.conf |\n\n---\n\n## To Resume Later\n\n1. Read this doc.\n2. Pick the next hypothesis from the list above.\n3. Apply one change at a time.\n4. Test suspend.\n5. Document result here.\n",
-      "file_name": null,
-      "created_at": "2026-05-09T01:23:20.502151",
-      "updated_at": "2026-05-09T01:23:20.502151",
       "status": "done",
       "parent_id": null,
       "show_on_website": false,

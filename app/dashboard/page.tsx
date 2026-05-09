@@ -348,7 +348,7 @@ export default function DashboardPage() {
                   </span>
                 </div>
 
-                <div className="p-3 space-y-3 min-h-[120px]">
+                <div className="p-3 space-y-3 min-h-[120px] max-h-[70vh] overflow-y-auto">
                   {colItems.map((item, i) => {
                     const childCount = item.children?.length || 0;
                     const onWeb = isWebsiteVisible(item);
