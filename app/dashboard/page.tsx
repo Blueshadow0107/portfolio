@@ -67,6 +67,7 @@ const COLUMNS: ColumnDef[] = [
 
 const STATUS_KEY = "dashboard-status-overrides";
 const WEBSITE_KEY = "dashboard-website-overrides";
+const PRIORITY_KEY = "dashboard-priority-overrides";
 const VIEW_MODE_KEY = "dashboard-view-mode";
 const ALL_ITEMS: Project[] = data.items;
 const TOP_LEVEL = ALL_ITEMS.filter((it) => !it.parent_id);
@@ -149,7 +150,7 @@ function isAcademic(item: Project): boolean {
   return item.tags.some((t) => t.toLowerCase() === "academic");
 }
 
-function DeployButton({ websiteOverrides }: { websiteOverrides: Record<number, string> }) {
+function DeployButton({ websiteOverrides, priorityOverrides }: { websiteOverrides: Record<number, string>; priorityOverrides: Record<number, string> }) {
   const [deploying, setDeploying] = useState(false);
   const [deployMsg, setDeployMsg] = useState<string | null>(null);
 
@@ -160,7 +161,7 @@ function DeployButton({ websiteOverrides }: { websiteOverrides: Record<number, s
       const res = await fetch("http://127.0.0.1:5123/deploy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ websiteOverrides }),
+        body: JSON.stringify({ websiteOverrides, priorityOverrides }),
       });
       const data = await res.json();
       if (data.status === "ok" && data.returncode === 0) {
@@ -204,6 +205,8 @@ export default function DashboardPage() {
   const [pendingStatus, setPendingStatus] = useState<Record<number, string>>({});
   const [savedWebsite, setSavedWebsite] = useState<Record<number, string>>({});
   const [pendingWebsite, setPendingWebsite] = useState<Record<number, string>>({});
+  const [savedPriority, setSavedPriority] = useState<Record<number, string>>({});
+  const [pendingPriority, setPendingPriority] = useState<Record<number, string>>({});
   const [selected, setSelected] = useState<Project | null>(null);
   const [dragOverCol, setDragOverCol] = useState<StatusKey | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("all");
@@ -211,23 +214,28 @@ export default function DashboardPage() {
   useEffect(() => {
     const st = loadJson(STATUS_KEY);
     const ws = loadJson(WEBSITE_KEY);
+    const pr = loadJson(PRIORITY_KEY);
     const vm = loadViewMode();
     setSavedStatus(st);
     setPendingStatus(st);
     setSavedWebsite(ws);
     setPendingWebsite(ws);
+    setSavedPriority(pr);
+    setPendingPriority(pr);
     setViewMode(vm);
     setItems(
       TOP_LEVEL.map((it) => ({
         ...it,
         status: st[it.id] ?? it.status,
+        priority: pr[it.id] !== undefined ? Number(pr[it.id]) : it.priority,
       }))
     );
   }, []);
 
   const hasUnsaved =
     JSON.stringify(pendingStatus) !== JSON.stringify(savedStatus) ||
-    JSON.stringify(pendingWebsite) !== JSON.stringify(savedWebsite);
+    JSON.stringify(pendingWebsite) !== JSON.stringify(savedWebsite) ||
+    JSON.stringify(pendingPriority) !== JSON.stringify(savedPriority);
 
   const moveItem = useCallback(
     (itemId: number, newStatus: StatusKey) => {
@@ -269,22 +277,46 @@ export default function DashboardPage() {
     });
   }, [pendingWebsite]);
 
+  const setItemPriority = useCallback((itemId: number, newPriority: number) => {
+    const original = TOP_LEVEL.find((it) => it.id === itemId)?.priority ?? 3;
+    const isReset = original === newPriority;
+
+    setItems((prev) =>
+      prev.map((it) => (it.id === itemId ? { ...it, priority: newPriority } : it))
+    );
+
+    setPendingPriority((prev) => {
+      const next = { ...prev };
+      if (isReset) {
+        delete next[itemId];
+      } else {
+        next[itemId] = String(newPriority);
+      }
+      return next;
+    });
+  }, []);
+
   const saveChanges = useCallback(() => {
     saveJson(STATUS_KEY, pendingStatus);
     saveJson(WEBSITE_KEY, pendingWebsite);
+    saveJson(PRIORITY_KEY, pendingPriority);
     setSavedStatus(pendingStatus);
     setSavedWebsite(pendingWebsite);
-  }, [pendingStatus, pendingWebsite]);
+    setSavedPriority(pendingPriority);
+  }, [pendingStatus, pendingWebsite, pendingPriority]);
 
   const resetOverrides = useCallback(() => {
     if (typeof window !== "undefined") {
       localStorage.removeItem(STATUS_KEY);
       localStorage.removeItem(WEBSITE_KEY);
+      localStorage.removeItem(PRIORITY_KEY);
     }
     setSavedStatus({});
     setPendingStatus({});
     setSavedWebsite({});
     setPendingWebsite({});
+    setSavedPriority({});
+    setPendingPriority({});
     setItems(TOP_LEVEL);
   }, []);
 
@@ -337,7 +369,7 @@ export default function DashboardPage() {
                 </motion.div>
               )}
             </AnimatePresence>
-            <DeployButton websiteOverrides={pendingWebsite} />
+            <DeployButton websiteOverrides={pendingWebsite} priorityOverrides={pendingPriority} />
             <button
               onClick={resetOverrides}
               className="text-xs px-3 py-1.5 rounded-lg border border-neutral-700 text-neutral-400 hover:text-neutral-200 hover:border-neutral-500 transition-colors"
@@ -594,6 +626,33 @@ export default function DashboardPage() {
                     {selected.description}
                   </p>
                 )}
+
+                {/* Priority selector */}
+                <div className="bg-neutral-950/50 border border-neutral-800 rounded-lg px-4 py-3">
+                  <p className="text-sm font-medium text-neutral-200 mb-2">
+                    Priority
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {[1, 2, 3, 4, 5].map((level) => {
+                      const pInfo = PRIORITY_LABELS[level];
+                      const current = (selected.priority ?? 3);
+                      const active = current === level;
+                      return (
+                        <button
+                          key={level}
+                          onClick={() => setItemPriority(selected.id, level)}
+                          className={`text-xs px-2.5 py-1 rounded-lg border transition-colors ${
+                            active
+                              ? pInfo.color
+                              : "border-neutral-700 text-neutral-400 hover:text-neutral-200 hover:border-neutral-500"
+                          }`}
+                        >
+                          {pInfo.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
                 {/* Website toggle */}
                 <div className="flex items-center justify-between bg-neutral-950/50 border border-neutral-800 rounded-lg px-4 py-3">
